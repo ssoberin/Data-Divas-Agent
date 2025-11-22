@@ -2,6 +2,8 @@ from fastapi import FastAPI, Depends, HTTPException
 from typing import Annotated, List
 from sqlmodel import Session  
 from database import create_db_and_tables, get_session, engine
+from services import build_ai_prompt
+from datetime import datetime
 from models import (
     MasterCreate, MasterPublic, MasterUpdate,
     VehicleCreate, VehiclePublic, VehicleUpdate,
@@ -13,6 +15,9 @@ from crud import (
     create_vehicle, read_vehicles, read_vehicle, update_vehicle, delete_vehicle,
     create_street, read_streets, read_street, update_street, delete_street,
     create_station, read_stations, read_station, update_station, delete_station
+)
+from services import (
+    get_all_data_for_prompt,
 )
 
 app = FastAPI(title="SnowExport Optimizer")
@@ -110,3 +115,108 @@ def api_update_station(station_id: int, station_update: StationUpdate, session: 
 @app.delete("/stations/{station_id}")
 def api_delete_station(station_id: int, session: SessionDep):
     return delete_station(session, station_id)
+
+@app.get("/test_method")
+def api_test_method(session: SessionDep):
+    return get_all_data_for_prompt(session)
+
+
+@app.get("/ai-prompt/")
+def api_get_ai_prompt(session: SessionDep):
+    """
+    Возвращает структурированный промпт для AI-планировщика
+    """
+    return build_ai_prompt(session)
+
+
+@router.post("/plan")
+def generate_snow_cleaning_plan(
+    planning_date: str,
+    session: Session = Depends(get_session)
+):
+    """
+    Генерация плана уборки снега с помощью нейросети и выгрузка CSV.
+    """
+
+    # Получаем данные из базы
+    all_data = get_all_data_for_prompt(session)
+
+    # Формируем промпт — сюда можно вставить системные ограничения и цели
+    prompt = {
+        "system_context": {
+            "role": "Ты - система оптимизации вывоза снега для Казани...",
+            "constraints": [
+                "Уборка начинается при накопленных осадках >=5 см",
+                "Техника должна использоваться рационально",
+                "Баланc нагрузки станций",
+                "И т.д."
+            ]
+        },
+        "planning_date": planning_date,
+        "weather_conditions": {
+            "snow_expected": False,
+            "snow_height_cm": 0,
+            "risk_level": "low"
+        },
+        "available_resources": all_data,
+        "optimization_goals": [
+            "Минимизация пробега",
+            "Баланс станций",
+            "Приоритет по снегу"
+        ],
+        "output_format": {
+            "required_structure": {
+                "plan_date": "string",
+                "total_streets": "int",
+                "assigned_vehicles": "int",
+                "assigned_brigades": "int",
+                "routes": "list",
+                "station_loading": "list",
+                "shift_distribution": "list",
+                "summary": "dict"
+            }
+        }
+    }
+
+    # 📌 Вызов ИИ
+    try:
+        llm_response = call_model_api(prompt)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+    # Проверяем структуру ответа (легкая валидация)
+    if "routes" not in llm_response:
+        raise HTTPException(status_code=500, detail="Некорректный формат ответа от ИИ")
+
+    # ----------------------
+    # Генерация CSV
+    # ----------------------
+    filename = f"snow_plan_{planning_date}.csv"
+    file_path = os.path.join(OUTPUT_CSV_DIR, filename)
+
+    with open(file_path, "w", newline="", encoding="utf-8") as csvfile:
+        fieldnames = [
+            "street_id", "street_name", "vehicle_id", "vehicle_name",
+            "brigade_id", "brigade_shift", "station_id", "station_name",
+            "estimated_snow_volume", "estimated_trips", "priority",
+            "shift_time", "route_sequence", "notes"
+        ]
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for route in llm_response.get("routes", []):
+            writer.writerow(route)
+
+    # Возвращаем JSON + файл
+    return {
+        "status": "success",
+        "plan": llm_response,
+        "csv_file": f"/snow-cleaning/csv/{filename}"
+    }
+
+
+@router.get("/csv/{filename}")
+def download_csv(filename: str):
+    file_path = os.path.join(OUTPUT_CSV_DIR, filename)
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="File not found")
+    return FileResponse(file_path, media_type="text/csv", filename=filename)

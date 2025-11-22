@@ -4,17 +4,11 @@ import requests
 import os
 from datetime import datetime, timedelta
 from typing import Dict, Any, Optional
-from dotenv import load_dotenv
-
-load_dotenv()
 
 import requests
 import os
 from datetime import datetime, timedelta
 from typing import Dict, Any, Optional
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 class WeatherForecast:
