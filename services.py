@@ -3,7 +3,7 @@ from sqlmodel import select, Session
 from models import Master, Vehicle, Street, Station
 from typing import Dict, List, Any
 import json  
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from WeatherAPI import WeatherForecast
 
 def get_masters_for_prompt(session: Session) -> List[Dict[str, Any]]:
@@ -126,19 +126,23 @@ def calculate_shift_schedule() -> Dict[str, Any]:
         }
     }
 
-def build_ai_prompt(session: Session) -> Dict[str, Any]:
+def build_ai_prompt(session: Session) -> str:
     """
     Собирает все данные в структурированный промпт для нейросети
+    и возвращает готовую JSON-строку с ensure_ascii=False.
     """
-    # Получаем все данные
+    # 1️⃣ Получаем данные
     operational_data = get_all_data_for_prompt(session)
     weather_data = get_weather_for_prompt()
     schedule_data = calculate_shift_schedule()
-    
-    # Формируем промпт
+
+    # 2️⃣ Формируем словарь промпта
     prompt = {
         "system_context": {
-            "role": "Ты - система оптимизации вывоза снега для Казани. Твоя задача - создать оптимальный суточный план уборки снега с учетом всех доступных ресурсов и условий.",
+            "role": (
+                "Ты - система оптимизации вывоза снега для Казани. "
+                "Твоя задача - создать оптимальный суточный план уборки снега с учетом всех доступных ресурсов и условий."
+            ),
             "constraints": [
                 "Уборка начинается при накопленных осадках >=5 см",
                 "Техника должна использоваться рационально с учетом ее вместимости",
@@ -147,32 +151,32 @@ def build_ai_prompt(session: Session) -> Dict[str, Any]:
                 "Сухие свалки используются только при перегрузке станций"
             ]
         },
-        "planning_date": schedule_data["plan_date"],
+        "planning_date": schedule_data.get("plan_date", str(datetime.now().date())),
         "weather_conditions": {
-            "snow_expected": weather_data["snow_expected"],
-            "snow_height_cm": weather_data["snow_height_cm"],
-            "temperature_impact": weather_data["temperature_impact"],
-            "risk_level": weather_data["risk_level"],
-            "work_recommendations": weather_data["work_recommendations"]
+            "snow_expected": weather_data.get("snow_expected", False),
+            "snow_height_cm": weather_data.get("snow_height_cm", 0),
+            "temperature_impact": weather_data.get("temperature_impact", "умеренная"),
+            "risk_level": weather_data.get("risk_level", "low"),
+            "work_recommendations": weather_data.get("work_recommendations", [])
         },
-        "shift_schedule": schedule_data["shifts"],
+        "shift_schedule": schedule_data.get("shifts", {}),
         "available_resources": {
-            "brigades": operational_data["brigades"],
-            "vehicles": operational_data["vehicles"],
-            "streets_to_clean": operational_data["streets_to_clean"],
-            "stations": operational_data["stations"]
+            "brigades": operational_data.get("brigades", []),
+            "vehicles": operational_data.get("vehicles", []),
+            "streets_to_clean": operational_data.get("streets_to_clean", []),
+            "stations": operational_data.get("stations", [])
         },
         "optimization_goals": [
             "Минимизация общего пробега техники",
             "Балансировка нагрузки на станции",
             "Максимальное использование снегоплавильных пунктов",
-            "Учет приоритета улиц по объему осадков", 
+            "Учет приоритета улиц по объему осадков",
             "Эффективное распределение по сменам"
         ],
         "output_format": {
             "required_structure": {
                 "plan_date": "string",
-                "total_streets": "int", 
+                "total_streets": "int",
                 "assigned_vehicles": "int",
                 "assigned_brigades": "int",
                 "routes": "list[dict]",
@@ -187,10 +191,16 @@ def build_ai_prompt(session: Session) -> Dict[str, Any]:
                 "shift_time", "route_sequence", "notes"
             ],
             "shift_distribution_fields": [
-                "shift_type", "brigade_count", "vehicle_count", 
+                "shift_type", "brigade_count", "vehicle_count",
                 "streets_assigned", "start_time", "end_time"
             ]
         }
     }
-    
-    return prompt
+
+    # 3️⃣ Преобразуем все datetime / date в строки и создаём JSON-строку
+    def convert_dates(obj):
+        if isinstance(obj, (datetime, date)):
+            return obj.isoformat()
+        return obj
+
+    return json.dumps(prompt, ensure_ascii=False, default=convert_dates)
