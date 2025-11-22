@@ -9,7 +9,7 @@ from openai import OpenAI, APITimeoutError
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key="sk-or-ваш_ключ"
+    api_key="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"
 )
 
 def generate_snow_plan(session: Session) -> Dict[str, Any]:
@@ -21,6 +21,7 @@ def generate_snow_plan(session: Session) -> Dict[str, Any]:
             "Ты — система оптимизации вывоза снега для Казани. "
             "Создай оптимальный суточный план уборки снега с учётом всех ресурсов и условий. "
             "Возвращай строго JSON, без текста вне JSON. "
+            "Если снег не идет то все заполняй пустыми данными"
             "Правила: "
             "• Уборка начинается при накопленных осадках >=5 см. "
             "• Бригады работают по сменам (день/ночь). "
@@ -37,7 +38,7 @@ def generate_snow_plan(session: Session) -> Dict[str, Any]:
         completion = client.chat.completions.create(
             model="qwen/qwen3-235b-a22b-2507",
             messages=messages,
-            max_tokens=4000,
+            max_tokens=6000,
             temperature=0.2,
             timeout=100
         )
