@@ -23,22 +23,13 @@ class WeatherForecast:
         self.base_url = "https://api.weatherapi.com/v1"
 
     def get_tomorrow_forecast(self, city: str, days: int = 2) -> Optional[Dict[str, Any]]:
-        """
-        Получение прогноза погоды на следующий день
 
-        Args:
-            city: Город для прогноза (например, "Kazan")
-            days: Количество дней прогноза (минимум 2 для получения завтра)
-
-        Returns:
-            Словарь с данными прогноза или None при ошибке
-        """
         try:
             url = f"{self.base_url}/forecast.json"
             params = {
                 'key': self.api_key,
                 'q': city,
-                'days': days,  # Меняем на 2 дня для получения завтра
+                'days': days,
                 'aqi': 'no',
                 'alerts': 'no',
                 'lang': 'ru'
@@ -51,40 +42,33 @@ class WeatherForecast:
             response.raise_for_status()
 
             data = response.json()
-            print(f"✅ Получено дней прогноза: {len(data['forecast']['forecastday'])}")
+            print(f"Получено дней прогноза: {len(data['forecast']['forecastday'])}")
             return self._extract_tomorrow_data(data)
 
         except requests.exceptions.RequestException as e:
-            print(f"❌ Ошибка запроса к WeatherAPI: {e}")
+            print(f"Ошибка запроса к WeatherAPI: {e}")
             if hasattr(e, 'response') and e.response is not None:
-                print(f"📄 Ответ сервера: {e.response.text}")
+                print(f"Ответ сервера: {e.response.text}")
             return None
         except Exception as e:
-            print(f"❌ Ошибка обработки данных: {e}")
+            print(f"Ошибка обработки данных: {e}")
             return None
 
     def _extract_tomorrow_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """Извлечение данных на следующий день из ответа API"""
-
-        # Проверяем наличие данных
         if 'forecast' not in data or 'forecastday' not in data['forecast']:
             raise ValueError("Некорректная структура данных от API")
 
         forecast_days = data['forecast']['forecastday']
-        print(f"📅 Доступно дней в ответе: {len(forecast_days)}")
+        print(f"Доступно дней в ответе: {len(forecast_days)}")
 
-        # Если есть только сегодняшний день, используем его для демонстрации
         if len(forecast_days) < 2:
-            print("⚠️  В ответе только 1 день, используем сегодняшние данные для демонстрации")
+            print("В ответе только 1 день, используем сегодняшние данные для демонстрации")
             tomorrow_data = forecast_days[0]
-            # Имитируем дату завтрашнего дня
             tomorrow_date = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
         else:
-            # Берем данные на завтра (второй элемент в массиве)
             tomorrow_data = forecast_days[1]
             tomorrow_date = tomorrow_data['date']
 
-        # Форматируем данные
         forecast = {
             'date': tomorrow_date,
             'location': {
@@ -114,7 +98,6 @@ class WeatherForecast:
             'hourly_forecast': []
         }
 
-        # Добавляем почасовой прогноз
         for hour_data in tomorrow_data['hour']:
             hour_forecast = {
                 'time': hour_data['time'],
@@ -132,15 +115,12 @@ class WeatherForecast:
         return forecast
 
     def get_today_forecast(self, city: str) -> Optional[Dict[str, Any]]:
-        """
-        Получение прогноза на сегодня (альтернативный метод)
-        """
         try:
             url = f"{self.base_url}/forecast.json"
             params = {
                 'key': self.api_key,
                 'q': city,
-                'days': 1,  # Только сегодня
+                'days': 1,
                 'aqi': 'no',
                 'alerts': 'no',
                 'lang': 'ru'
@@ -171,20 +151,11 @@ class WeatherForecast:
             }
 
         except Exception as e:
-            print(f"❌ Ошибка получения прогноза на сегодня: {e}")
+            print(f"Ошибка получения прогноза на сегодня: {e}")
             return None
 
     def get_snow_forecast_analysis(self, city: str, use_today: bool = False) -> Dict[str, Any]:
-        """
-        Специальный анализ для системы уборки снега
 
-        Args:
-            city: Город для анализа
-            use_today: Использовать сегодняшние данные если завтра недоступно
-
-        Returns:
-            Анализ погодных условий для планирования уборки снега
-        """
         if use_today:
             forecast = self.get_today_forecast(city)
             if forecast:
@@ -192,7 +163,6 @@ class WeatherForecast:
         else:
             forecast = self.get_tomorrow_forecast(city)
             if not forecast and use_today:
-                # Если завтра нет, пробуем сегодня
                 forecast = self.get_today_forecast(city)
                 if forecast:
                     forecast['is_tomorrow'] = False
@@ -203,7 +173,6 @@ class WeatherForecast:
         day_data = forecast['day_forecast']
         is_tomorrow = forecast.get('is_tomorrow', True)
 
-        # Анализ условий для уборки снега
         analysis = {
             'snow_expected': day_data['chance_of_snow'] > 50 and day_data['total_precip_mm'] > 1,
             'snow_removal_needed': False,
@@ -214,16 +183,13 @@ class WeatherForecast:
             'forecast_type': 'tomorrow' if is_tomorrow else 'today'
         }
 
-        # Расчет предполагаемой высоты снега (упрощенный)
         if day_data['chance_of_snow'] > 70:
             analysis['snow_height_cm'] = min(day_data['total_precip_mm'] * 1.5, 20)  # до 20 см
         elif day_data['chance_of_snow'] > 30:
             analysis['snow_height_cm'] = day_data['total_precip_mm'] * 0.8
 
-        # Определение необходимости уборки
         analysis['snow_removal_needed'] = analysis['snow_height_cm'] >= 5
 
-        # Влияние температуры
         min_temp = day_data.get('min_temp_c', day_data['max_temp_c'] - 5)
         if min_temp < -15:
             analysis['temperature_impact'] = 'Экстремально низкая температура'
@@ -234,7 +200,6 @@ class WeatherForecast:
         else:
             analysis['temperature_impact'] = 'Умеренная температура'
 
-        # Рекомендации по работам
         if analysis['snow_removal_needed']:
             analysis['work_recommendations'].append('Планировать уборку снега')
             if analysis['snow_height_cm'] > 10:
@@ -277,10 +242,9 @@ class WeatherForecast:
             return None
 
 
-# Тестирование
 def run_weather_api():
     wf = WeatherForecast(api_key="14eb71c084274841aa893453252211")
-    print("🧪 Тестирование WeatherAPI...")
+    print("Тестирование WeatherAPI...")
 
     print("\n1. Текущая погода:")
     current = wf.get_current_weather('Kazan')
@@ -298,9 +262,9 @@ def run_weather_api():
         analysis = result['snow_analysis']
 
         forecast_type = "завтра" if analysis['forecast_type'] == 'tomorrow' else "сегодня"
-        print(f"📅 Дата ({forecast_type}): {forecast['date']}")
+        print(f"Дата ({forecast_type}): {forecast['date']}")
         print(
-            f"🌡️ Температура: {forecast['day_forecast']['min_temp_c']}°C - {forecast['day_forecast']['max_temp_c']}°C")
+            f"🌡Температура: {forecast['day_forecast']['min_temp_c']}°C - {forecast['day_forecast']['max_temp_c']}°C")
         print(f"Погода: {forecast['day_forecast']['condition']}")
         print(f"Вероятность снега: {forecast['day_forecast']['chance_of_snow']}%")
         print(f"Осадки: {forecast['day_forecast']['total_precip_mm']} мм")
@@ -313,7 +277,7 @@ def run_weather_api():
             print(f"  • {rec}")
 
         if 'hourly_forecast' in forecast and forecast['hourly_forecast']:
-            print(f"\n🕒 Почасовой прогноз (первые 3 часа):")
+            print(f"\nПочасовой прогноз (первые 3 часа):")
             for hour in forecast['hourly_forecast'][:3]:
                 time = hour['time'].split(' ')[1][:5]
                 print(f"  {time} - {hour['temp_c']}°C, {hour['condition']}")
