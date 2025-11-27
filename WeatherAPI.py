@@ -1,9 +1,5 @@
 api_key="14eb71c084274841aa893453252211"
 
-import requests
-import os
-from datetime import datetime, timedelta
-from typing import Dict, Any, Optional
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -178,7 +174,8 @@ class WeatherForecast:
             'snow_removal_needed': False,
             'snow_height_cm': 0,
             'temperature_impact': '',
-            'work_recommendations': [],
+            'work_recommendations1': str,
+            'work_recommendations2': str,
             'risk_level': 'low',
             'forecast_type': 'tomorrow' if is_tomorrow else 'today'
         }
@@ -201,18 +198,19 @@ class WeatherForecast:
             analysis['temperature_impact'] = 'Умеренная температура'
 
         if analysis['snow_removal_needed']:
-            analysis['work_recommendations'].append('Планировать уборку снега')
+            analysis['work_recommendations1']='Планировать уборку снега'
             if analysis['snow_height_cm'] > 10:
-                analysis['work_recommendations'].append('Увеличить количество техники')
+                analysis['work_recommendations2']='Увеличить количество техники'
         else:
-            analysis['work_recommendations'].append('Уборка снега не требуется')
+            analysis['work_recommendations1']='Уборка снега не требуется'
 
         if day_data['chance_of_rain'] > 50:
-            analysis['work_recommendations'].append('Возможен дождь - ограничить работы')
+            analysis['work_recommendations2']='Возможен дождь - ограничить работы'
 
         return {
-            'weather_forecast': forecast,
-            'snow_analysis': analysis
+            "plan_snow_or_no":analysis['work_recommendations1'],
+            "extra": analysis['work_recommendations2'],
+            "height_snow": analysis['snow_height_cm']
         }
 
     def get_current_weather(self, city: str) -> Optional[Dict[str, Any]]:
@@ -248,13 +246,12 @@ def run_weather_api():
 
     print("\n1. Текущая погода:")
     current = wf.get_current_weather('Kazan')
-    if current:
-        print(f"{current['location']}: {current['temp_c']}°C, {current['condition']}")
-    else:
+    return f"{current['location']}: {current['temp_c']}°C, {current['condition']}"
+    """else:
         print("Не удалось получить текущую погоду")
         return
 
-    print("\n2. Прогноз для планирования уборки снега:")
+    text="\n2. Прогноз для планирования уборки снега:"
     result = wf.get_snow_forecast_analysis('Kazan', use_today=True)
 
     if result:
@@ -271,7 +268,7 @@ def run_weather_api():
         print(f"Предполагаемая высота снега: {analysis['snow_height_cm']:.1f} см")
         print(f"Уборка требуется: {'Да' if analysis['snow_removal_needed'] else 'Нет'}")
         print(f"Уровень риска: {analysis['risk_level']}")
-
+        text += forecast['day_forecast']['condition']
         print("\nРекомендации:")
         for rec in analysis['work_recommendations']:
             print(f"  • {rec}")
@@ -281,9 +278,25 @@ def run_weather_api():
             for hour in forecast['hourly_forecast'][:3]:
                 time = hour['time'].split(' ')[1][:5]
                 print(f"  {time} - {hour['temp_c']}°C, {hour['condition']}")
+        return text
     else:
-        print("Не удалось получить прогноз")
+        return "Не удалось получить прогноз"""
 
 
-if __name__ == "__main__":
-    run_weather_api()
+def get_weather_data(city: str = "Kazan"):
+    wf = WeatherForecast(api_key="14eb71c084274841aa893453252211")
+    current = wf.get_current_weather(city)
+    snow_analysis = wf.get_snow_forecast_analysis(city, use_today=True)
+    print("Погода: ", current["temp_c"])
+    print("Высота снега: ", snow_analysis["height_snow"])
+    print(snow_analysis["plan_snow_or_no"])
+    print(snow_analysis["extra"])
+    return {
+        "current_temp": current["temp_c"] if current else None,
+        "height": snow_analysis["height_snow"] if snow_analysis else None,
+        "plan_snow": snow_analysis["plan_snow_or_no"] if snow_analysis else None,
+        "extra": snow_analysis["extra"] if snow_analysis else None
+    }
+
+get_weather_data()
+

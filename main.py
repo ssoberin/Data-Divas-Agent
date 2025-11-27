@@ -15,7 +15,7 @@ from crud import (
     create_station, read_stations, read_station, update_station, delete_station
 )
 
-app = FastAPI(title="SnowExport Optimizer")
+'''app = FastAPI(title="SnowExport Optimizer")
 
 @app.on_event("startup")
 def on_startup():
@@ -109,4 +109,4 @@ def api_update_station(station_id: int, station_update: StationUpdate, session: 
 
 @app.delete("/stations/{station_id}")
 def api_delete_station(station_id: int, session: SessionDep):
-    return delete_station(session, station_id)
+    return delete_station(session, station_id)'''
