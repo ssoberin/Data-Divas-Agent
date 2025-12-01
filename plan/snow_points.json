@@ -1,0 +1,66 @@
+{
+  "metadata": {
+    "city": "Казань",
+    "snow_depth_cm": 5,
+    "snow_density_kg_m3": 70.0,
+    "generated_at": "2025-12-01T20:52:00.202875"
+  },
+  "points": [
+    {
+      "point_id": 1,
+      "address": "Улица Восход, 16",
+      "lat": 55.8327685,
+      "lon": 49.0738973,
+      "length_m": 100.0,
+      "area_m2": 650,
+      "snow_mass_kg": 2275.0,
+      "trucks_needed": 1,
+      "volume_m3": 32.5
+    },
+    {
+      "point_id": 2,
+      "address": "Улица Шамиля Усманова, 10",
+      "lat": 55.8302245,
+      "lon": 49.0760567,
+      "length_m": 100.0,
+      "area_m2": 650,
+      "snow_mass_kg": 2275.0,
+      "trucks_needed": 1,
+      "volume_m3": 32.5
+    },
+    {
+      "point_id": 3,
+      "address": "Проспект Победы, 100",
+      "lat": 55.7688498,
+      "lon": 49.2208479,
+      "length_m": 100.0,
+      "area_m2": 650,
+      "snow_mass_kg": 2275.0,
+      "trucks_needed": 1,
+      "volume_m3": 32.5
+    },
+    {
+      "point_id": 4,
+      "address": "Улица Баумана, 55",
+      "lat": 55.79242,
+      "lon": 49.111398,
+      "length_m": 100.0,
+      "area_m2": 600,
+      "snow_mass_kg": 2100.0,
+      "trucks_needed": 1,
+      "volume_m3": 30.0
+    },
+    {
+      "point_id": 5,
+      "address": "Улица Ленина, 1",
+      "lat": 55.8783104,
+      "lon": 49.1420131,
+      "length_m": 100.0,
+      "area_m2": 600,
+      "snow_mass_kg": 2100.0,
+      "trucks_needed": 1,
+      "volume_m3": 30.0
+    }
+  ],
+  "total_trucks_needed": 5
+}

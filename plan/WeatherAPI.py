@@ -210,7 +210,8 @@ class WeatherForecast:
         return {
             "plan_snow_or_no":analysis['work_recommendations1'],
             "extra": analysis['work_recommendations2'],
-            "height_snow": analysis['snow_height_cm']
+            "height_snow": analysis['snow_height_cm'],
+            "needed":analysis['snow_removal_needed']
         }
 
     def get_current_weather(self, city: str) -> Optional[Dict[str, Any]]:
@@ -240,57 +241,10 @@ class WeatherForecast:
             return None
 
 
-def run_weather_api():
-    wf = WeatherForecast(api_key="14eb71c084274841aa893453252211")
-    print("Тестирование WeatherAPI...")
-
-    print("\n1. Текущая погода:")
-    current = wf.get_current_weather('Kazan')
-    return f"{current['location']}: {current['temp_c']}°C, {current['condition']}"
-    """else:
-        print("Не удалось получить текущую погоду")
-        return
-
-    text="\n2. Прогноз для планирования уборки снега:"
-    result = wf.get_snow_forecast_analysis('Kazan', use_today=True)
-
-    if result:
-        forecast = result['weather_forecast']
-        analysis = result['snow_analysis']
-
-        forecast_type = "завтра" if analysis['forecast_type'] == 'tomorrow' else "сегодня"
-        print(f"Дата ({forecast_type}): {forecast['date']}")
-        print(
-            f"🌡Температура: {forecast['day_forecast']['min_temp_c']}°C - {forecast['day_forecast']['max_temp_c']}°C")
-        print(f"Погода: {forecast['day_forecast']['condition']}")
-        print(f"Вероятность снега: {forecast['day_forecast']['chance_of_snow']}%")
-        print(f"Осадки: {forecast['day_forecast']['total_precip_mm']} мм")
-        print(f"Предполагаемая высота снега: {analysis['snow_height_cm']:.1f} см")
-        print(f"Уборка требуется: {'Да' if analysis['snow_removal_needed'] else 'Нет'}")
-        print(f"Уровень риска: {analysis['risk_level']}")
-        text += forecast['day_forecast']['condition']
-        print("\nРекомендации:")
-        for rec in analysis['work_recommendations']:
-            print(f"  • {rec}")
-
-        if 'hourly_forecast' in forecast and forecast['hourly_forecast']:
-            print(f"\nПочасовой прогноз (первые 3 часа):")
-            for hour in forecast['hourly_forecast'][:3]:
-                time = hour['time'].split(' ')[1][:5]
-                print(f"  {time} - {hour['temp_c']}°C, {hour['condition']}")
-        return text
-    else:
-        return "Не удалось получить прогноз"""
-
-
 def get_weather_data(city: str = "Kazan"):
     wf = WeatherForecast(api_key="14eb71c084274841aa893453252211")
     current = wf.get_current_weather(city)
     snow_analysis = wf.get_snow_forecast_analysis(city, use_today=True)
-    print("Погода: ", current["temp_c"])
-    print("Высота снега: ", snow_analysis["height_snow"])
-    print(snow_analysis["plan_snow_or_no"])
-    print(snow_analysis["extra"])
     return {
         "current_temp": current["temp_c"] if current else None,
         "height": snow_analysis["height_snow"] if snow_analysis else None,
@@ -298,5 +252,21 @@ def get_weather_data(city: str = "Kazan"):
         "extra": snow_analysis["extra"] if snow_analysis else None
     }
 
-get_weather_data()
+def get_height(city: str = "Kazan"):
+    wf = WeatherForecast(api_key="14eb71c084274841aa893453252211")
+    current = wf.get_current_weather(city)
+    snow_analysis = wf.get_snow_forecast_analysis(city, use_today=True)
+    return snow_analysis["height_snow"]
+
+
+
+def start_or_no(city: str = "Kazan"):
+    wf = WeatherForecast(api_key="14eb71c084274841aa893453252211")
+    current = wf.get_current_weather(city)
+    snow_analysis = wf.get_snow_forecast_analysis(city, use_today=True)
+    return snow_analysis["needed"]
+    #return True
+
+#print(start_or_no(city="Kazan"))
+#(get_height())
 
