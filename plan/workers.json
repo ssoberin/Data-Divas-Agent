@@ -1,0 +1,235 @@
+{
+  "metadata": {
+    "generated_at": "2025-11-29T19:05:00+03:00",
+    "city": "Казань",
+    "snow_density_kg_m3": 70.0,
+    "unit": "metric"
+  },
+  "depots": [
+    {
+      "depot_id": 1,
+      "depot_name": "Депо №1 — Вахитовский район",
+      "address": "ул. Пушкина, д. 45",
+      "depot_lat":55.7908696,
+      "depot_lon": 49.0976020,
+      "workers": [
+        {
+          "worker_id": 1,
+          "name": "Иванов Илья Игоревич",
+          "phone": "+7 (917) 123-45-61",
+          "tech_type": "КАМАЗ-6520",
+          "tech_volume_m3": 12.0,
+          "max_payload_kg": 10000,
+          "snow_load_kg": 840,
+          "max_trips_per_day": 6,
+          "status": "available",
+          "notes": "Техника в хорошем состоянии, работает с 6:00"
+        },
+        {
+          "worker_id": 7,
+          "name": "Морозов Егор Романович",
+          "phone": "+7 (917) 123-45-71",
+          "tech_type": "КАМАЗ-6520",
+          "tech_volume_m3": 12.0,
+          "max_payload_kg": 10000,
+          "snow_load_kg": 840,
+          "max_trips_per_day": 6,
+          "status": "available",
+          "notes": "Старший водитель, водит с 1998 г."
+        },
+        {
+          "worker_id": 8,
+          "name": "Лебедева Светлана Андреевна",
+          "phone": "+7 (917) 123-45-72",
+          "tech_type": "ПКС-7-247",
+          "tech_volume_m3": 10.0,
+          "max_payload_kg": 6000,
+          "snow_load_kg": 700,
+          "max_trips_per_day": 7,
+          "status": "available",
+          "notes": "Опыт работы с комбинированными машинами — 8 лет"
+        }
+      ]
+    },
+    {
+      "depot_id": 2,
+      "depot_name": "Депо №2 — Приволжский район",
+      "address": "Проспект Победы, д. 102",
+      "depot_lat":55.7756236,
+      "depot_lon":49.2194394,
+      "workers": [
+        {
+          "worker_id": 2,
+          "name": "Петров Артём Алексеевич",
+          "phone": "+7 (917) 123-45-62",
+          "tech_type": "ПКС-7-247",
+          "tech_volume_m3": 10.0,
+          "max_payload_kg": 6000,
+          "snow_load_kg": 700,
+          "max_trips_per_day": 7,
+          "status": "available",
+          "notes": "Комбинированная машина — щётка + отвал"
+        },
+        {
+          "worker_id": 9,
+          "name": "Соколов Виктор Дмитриевич",
+          "phone": "+7 (917) 123-45-73",
+          "tech_type": "КАМАЗ-6520 (самосвал)",
+          "tech_volume_m3": 14.0,
+          "max_payload_kg": 12000,
+          "snow_load_kg": 980,
+          "max_trips_per_day": 5,
+          "status": "available",
+          "notes": "Работает в паре с погрузчиком"
+        },
+        {
+          "worker_id": 10,
+          "name": "Калинина Ольга Петровна",
+          "phone": "+7 (917) 123-45-74",
+          "tech_type": "МТЗ-82.1 + ковш 1.2м³",
+          "tech_volume_m3": 4.0,
+          "max_payload_kg": 2500,
+          "snow_load_kg": 280,
+          "max_trips_per_day": 10,
+          "status": "available",
+          "notes": "Специализируется на дворовых территориях"
+        }
+      ]
+    },
+    {
+      "depot_id": 3,
+      "depot_name": "Депо №3 — Ново-Савиновский район",
+      "address": "ул. Чистопольская, д. 67",
+      "depot_lat":55.8194371,
+      "depot_lon":49.1437912,
+      "workers": [
+        {
+          "worker_id": 3,
+          "name": "Сидорова Вера Викторовна",
+          "phone": "+7 (917) 123-45-63",
+          "tech_type": "КАМАЗ-6520 (самосвал)",
+          "tech_volume_m3": 14.0,
+          "max_payload_kg": 12000,
+          "snow_load_kg": 980,
+          "max_trips_per_day": 5,
+          "status": "maintenance",
+          "notes": "На ТО до 10:00, затем в работе"
+        },
+        {
+          "worker_id": 11,
+          "name": "Волков Андрей Валерьевич",
+          "phone": "+7 (917) 123-45-75",
+          "tech_type": "Погрузчик JCB 4CX",
+          "tech_volume_m3": 6.0,
+          "max_payload_kg": 4500,
+          "snow_load_kg": 420,
+          "max_trips_per_day": 8,
+          "status": "available",
+          "notes": "Работает с самосвалом №9"
+        },
+        {
+          "worker_id": 12,
+          "name": "Никитина Елена Сергеевна",
+          "phone": "+7 (917) 123-45-76",
+          "tech_type": "КАМАЗ-6520",
+          "tech_volume_m3": 12.0,
+          "max_payload_kg": 10000,
+          "snow_load_kg": 840,
+          "max_trips_per_day": 6,
+          "status": "available",
+          "notes": "Дежурный по ночным сменам"
+        }
+      ]
+    },
+    {
+      "depot_id": 4,
+      "depot_name": "Депо №4 — Московский район",
+      "address": "ул. Амирхана, д. 28",
+      "depot_lat":55.823189,
+      "depot_lon":49.1338595,
+      "workers": [
+        {
+          "worker_id": 4,
+          "name": "Кузнецов Дмитрий Сергеевич",
+          "phone": "+7 (917) 123-45-64",
+          "tech_type": "МТЗ-82.1 + ковш 1.2м³",
+          "tech_volume_m3": 4.0,
+          "max_payload_kg": 2500,
+          "snow_load_kg": 280,
+          "max_trips_per_day": 10,
+          "status": "available",
+          "notes": "Для узких улиц и дворов"
+        },
+        {
+          "worker_id": 13,
+          "name": "Зайцев Игорь Витальевич",
+          "phone": "+7 (917) 123-45-77",
+          "tech_type": "ПКС-7-247",
+          "tech_volume_m3": 10.0,
+          "max_payload_kg": 6000,
+          "snow_load_kg": 700,
+          "max_trips_per_day": 7,
+          "status": "available",
+          "notes": "Опытный в работе на магистралях"
+        },
+        {
+          "worker_id": 14,
+          "name": "Орлова Татьяна Дмитриевна",
+          "phone": "+7 (917) 123-45-78",
+          "tech_type": "КАМАЗ-6520 (самосвал)",
+          "tech_volume_m3": 14.0,
+          "max_payload_kg": 12000,
+          "snow_load_kg": 980,
+          "max_trips_per_day": 5,
+          "status": "available",
+          "notes": "Работает в составе бригады с погрузчиком"
+        }
+      ]
+    },
+    {
+      "depot_id": 5,
+      "depot_name": "Депо №5 — Авиастроительный район",
+      "address": "ул. Королёва, д. 35",
+      "depot_lat":55.8393685,
+      "depot_lon":49.0643051,
+      "workers": [
+        {
+          "worker_id": 5,
+          "name": "Фёдорова Анна Юрьевна",
+          "phone": "+7 (917) 123-45-65",
+          "tech_type": "Погрузчик JCB 4CX",
+          "tech_volume_m3": 6.0,
+          "max_payload_kg": 4500,
+          "snow_load_kg": 420,
+          "max_trips_per_day": 8,
+          "status": "available",
+          "notes": "Работает в паре с самосвалом"
+        },
+        {
+          "worker_id": 6,
+          "name": "Григорьев Максим Олегович",
+          "phone": "+7 (917) 123-45-66",
+          "tech_type": "КАМАЗ-6520",
+          "tech_volume_m3": 12.0,
+          "max_payload_kg": 10000,
+          "snow_load_kg": 840,
+          "max_trips_per_day": 6,
+          "status": "available",
+          "notes": ""
+        },
+        {
+          "worker_id": 15,
+          "name": "Беляев Роман Константинович",
+          "phone": "+7 (917) 123-45-79",
+          "tech_type": "МТЗ-82.1 + ковш 1.2м³",
+          "tech_volume_m3": 4.0,
+          "max_payload_kg": 2500,
+          "snow_load_kg": 280,
+          "max_trips_per_day": 10,
+          "status": "available",
+          "notes": "Молодой специалист, прошёл обучение в ЦППК"
+        }
+      ]
+    }
+  ]
+}

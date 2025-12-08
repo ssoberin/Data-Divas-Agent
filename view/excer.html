@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система учета</title>
+    <link rel="stylesheet" href="excer.css">
+</head>
+<body>
+    <div class="tabs">
+        <button class="tab-button active" onclick="openTab('main')">Главная</button>
+        <button class="tab-button" onclick="openTab('worker')">Учет работ</button>
+    </div>
+
+    <div class="container">
+        <!-- Главная вкладка -->
+        <div id="main" class="tab-content active">
+            <!-- Секция погоды -->
+            <div class="section">
+                <h2>Уборка на сегодня спланирована</h2>
+                <div class="weather-info">
+                    <div class="field">
+                        <label>Текущая температура:</label>
+                        <span id="temperature"></span>
+                    </div>
+                    <div class="field">
+                        <label>Снежный покров:</label>
+                        <span id="snow-cover"></span>
+                    </div>
+                    <div class="field">
+                        <label>Состояние:</label>
+                        <span id="weather-status"></span>
+                    </div>
+                    <div class="field">
+                        <label>Требуется уборка:</label>
+                        <span id="snow-removal"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Секция задач -->
+            <div class="section">
+                <div class="task-controls">
+                    <input type="text" id="task-input" placeholder="Введите данные">
+                    <button onclick="processTask()">Обработать</button>
+                    <input type="text" id="task-search" placeholder="Искать задачу по ключевому слову...">
+                    <button onclick="searchTask()">Найти</button>
+                </div>
+                
+                <div class="task-output">
+                    <table id="task-table">
+                        <thead>
+                            <tr>
+                                <th>Участок</th>
+                                <th>Ответственный</th>
+                                <th>Телефон</th>
+                                <th>Режим</th>
+                                <th>Время</th>
+                                <th>Тип техники</th>
+                                <th>Количество</th>
+                                <th>Плановое задание</th>
+                                <th>Вид работ</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Секция выгрузки -->
+            <div class="section centered-section">
+                <h2 class="centered-title">Экспорт плана</h2>
+                <div class="export-section centered-export">
+                    <button onclick="exportTasksToCSV()" class="export-btn large-btn">Экспорт плана в CSV</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка учета работ -->
+        <div id="worker" class="tab-content">
+            <div class="section">
+                <h2 class="centered-title">Учет работ</h2>
+                
+                <!-- Новая форма учета работ -->
+                <div class="work-form">
+                    <h3>Введите данные техники</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="depot">Выберите депо:</label>
+                            <select id="depot" class="form-control">
+                                <option value="">-- Выберите депо --</option>
+                                <option value="depot1">Депо №1</option>
+                                <option value="depot2">Депо №2</option>
+                                <option value="depot3">Депо №3</option>
+                                <option value="depot4">Депо №4</option>
+                                <option value="depot5">Депо №5</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="worker-name">ФИО:</label>
+                            <input type="text" id="worker-name" placeholder="Введите ФИО" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="machine-type">Тип техники:</label>
+                            <select id="machine-type" class="form-control">
+                                <option value="">-- Выберите тип --</option>
+                                <option value="snowplow">Снегоуборочная машина</option>
+                                <option value="truck">Грузовик</option>
+                                <option value="loader">Погрузчик</option>
+                                <option value="tractor">Трактор</option>
+                                <option value="spreader">Разбрасыватель реагентов</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="body-volume">Объем кузова (м³):</label>
+                            <input type="number" id="body-volume" placeholder="Введите объем" class="form-control" min="0" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="max-capacity">Максимальная масса вместимости (кг):</label>
+                            <input type="number" id="max-capacity" placeholder="Введите массу" class="form-control" min="0" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="snow-capacity">Максимальная масса вместимости снега (кг):</label>
+                            <input type="number" id="snow-capacity" placeholder="Введите массу снега" class="form-control" min="0" step="0.1">
+                        </div>
+                        <div class="form-group full-width submit-group">
+                            <button onclick="submitWorkData()" class="submit-btn">Отправить данные</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="excer.js"></script>
+</body>
+</html>
