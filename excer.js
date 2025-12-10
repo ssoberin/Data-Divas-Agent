@@ -1,6 +1,15 @@
 // Массив для хранения задач
 let tasks = [];
 
+
+fetch('http://127.0.0.1:8000/api/predict/', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ age: 25 })
+})
+.then(r => r.json())
+.then(data => console.log(data));
+
 // Функция обработки задач ИИ
 function processTask() {
     const input = document.getElementById('task-input').value;
