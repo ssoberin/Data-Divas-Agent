@@ -1,0 +1,19 @@
+# _config.yml
+
+# Отключаем всё лишнее
+theme: ""                   # ← важно: пустая тема
+remote_theme: ""            # ← если не используете
+plugins: []                 # ← отключаем все плагины (в т.ч. SEO, metadata)
+gems: []                    # ← альтернативное имя для plugins (для старых версий)
+
+# Базовые настройки (необязательно, но полезно)
+title: Data Divas
+description: Project by Data Divas
+baseurl: ""                 # ← важно! без слеша, если сайт в корне
+url: ""                     # ← можно оставить пустым — GitHub Pages подставит автоматически
+
+# Отключаем обработку Markdown и всего, что не нужно
+markdown: kramdown
+highlighter: rouge
+lsi: false
+incremental: false
