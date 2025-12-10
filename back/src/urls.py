@@ -22,6 +22,7 @@ from .yasg import urlpatterns as yasg_urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include("src.apps.api.urls", namespace="api")),
+    path('https://ssoberin.github.io/Data-Divas-Agent/', index, name='index')
 ]
 
 urlpatterns+=yasg_urls
