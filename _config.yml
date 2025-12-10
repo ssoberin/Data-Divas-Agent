@@ -1,0 +1,14 @@
+# _config.yml
+title: Data Divas
+description: Age prediction project
+theme: jekyll-theme-primer
+
+# Обязательно: включите нужные плагины (только поддерживаемые!)
+plugins:
+  - jekyll-seo-tag
+  - jekyll-github-metadata
+  - jekyll-paginate
+
+# Отключите всё лишнее
+markdown: kramdown
+highlighter: rouge
