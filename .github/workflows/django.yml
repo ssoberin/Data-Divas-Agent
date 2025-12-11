@@ -24,7 +24,7 @@ jobs:
 
     - name: Change path
       run: |
-        cd back
+        cd ./back
     - name: Run Project
       run: |
         python manage.py runserver ssoberin.github.io/Data-Divas-Agent/
