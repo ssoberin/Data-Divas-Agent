@@ -1,9 +1,5 @@
 api_key="14eb71c084274841aa893453252211"
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
 import requests
 import os
 from datetime import datetime, timedelta
@@ -241,10 +237,17 @@ class WeatherForecast:
             return None
 
 
-def get_weather_data(city: str = "Kazan"):
-    wf = WeatherForecast(api_key="14eb71c084274841aa893453252211")
+def get_snow_forecast_analysis(city, use_today, api_key):
+    wf = WeatherForecast(api_key)
     current = wf.get_current_weather(city)
-    snow_analysis = wf.get_snow_forecast_analysis(city, use_today=True)
+    snow_analysis = wf.get_snow_forecast_analysis(city, use_today)
+
+    return current, snow_analysis
+
+
+def get_weather_data(city: str = "Kazan"):
+    current, snow_analysis = get_snow_forecast_analysis(city, True, api_key)
+
     return {
         "current_temp": current["temp_c"] if current else None,
         "height": snow_analysis["height_snow"] if snow_analysis else None,
@@ -252,18 +255,16 @@ def get_weather_data(city: str = "Kazan"):
         "extra": snow_analysis["extra"] if snow_analysis else None
     }
 
+
 def get_height(city: str = "Kazan"):
-    wf = WeatherForecast(api_key="14eb71c084274841aa893453252211")
-    current = wf.get_current_weather(city)
-    snow_analysis = wf.get_snow_forecast_analysis(city, use_today=True)
+    _, snow_analysis = get_snow_forecast_analysis(city, True, api_key)
+
     return snow_analysis["height_snow"]
 
 
-
 def start_or_no(city: str = "Kazan"):
-    wf = WeatherForecast(api_key="14eb71c084274841aa893453252211")
-    current = wf.get_current_weather(city)
-    snow_analysis = wf.get_snow_forecast_analysis(city, use_today=True)
+    _, snow_analysis = get_snow_forecast_analysis(city, True, api_key)
+
     return snow_analysis["needed"]
     #return True
 

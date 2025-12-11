@@ -31,7 +31,10 @@ env.read_env(os.path.join(BASE_DIR, '.env.dev'))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'ssoberin.github.io/Data-Divas-Agent/',
+    'localhost',
+]
 
 
 # Application definition

@@ -39,6 +39,24 @@ class Depo(models.Model):
         null=False,
         blank=False,
     )
+
+    class Meta:
+        verbose_name = 'Депо'
+        verbose_name_plural = 'Депо'
+
+
+class Coordinates(models.Model):
+    object_type = models.IntegerField(
+        verbose_name="Тип объекта",
+        null=False,
+        blank=False,
+        choices=ObjectTypeEnum.values,
+    )
+    object_id = models.IntegerField(
+        verbose_name="ID объекта",
+        null=False,
+        blank=False,
+    )
     depot_lat = models.FloatField(
         verbose_name="Широта",
         null=True,
@@ -50,6 +68,20 @@ class Depo(models.Model):
         blank=True,
     )
 
+    def __str__(self):
+        return f"Координата объекта с типом {ObjectTypeEnum.values[self.object_type]} ID {self.object_id}"
+
     class Meta:
-        verbose_name = 'Депо'
-        verbose_name_plural = 'Депо'
+        verbose_name = 'Координата'
+        verbose_name_plural = 'Координаты объектов'
+
+
+class ObjectTypeEnum:
+
+    WORKER = 'Сотрудник'
+    DEPO = "Депо"
+
+    values = {
+        WORKER: Worker,
+        DEPO: Depo,
+    }

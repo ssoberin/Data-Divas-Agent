@@ -1,0 +1,24 @@
+jobs:
+  django-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install pipenv
+        pipenv install
+
+    - name: Run up
+      run: |
+        pipenv run python manage.py up ssoberin.github.io/Data-Divas-Agent/ --email=<your-email>
+      env:
+        DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
