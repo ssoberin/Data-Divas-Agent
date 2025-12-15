@@ -62,7 +62,7 @@ class Coordinates(models.Model):
         verbose_name="Тип объекта",
         null=False,
         blank=False,
-        choices=ObjectTypeEnum.values,
+        # choices=ObjectTypeEnum.values,
     )
     object_id = models.IntegerField(
         verbose_name="ID объекта",
