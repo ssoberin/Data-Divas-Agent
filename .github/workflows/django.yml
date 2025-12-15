@@ -22,6 +22,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Migrate
+      run: |
+        python back/manage.py migrate --no-input
+
     - name: Run Project
       run: |
         python back/manage.py runserver
