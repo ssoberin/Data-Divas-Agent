@@ -24,4 +24,4 @@ jobs:
 
     - name: Run Project
       run: |
-        python back/manage.py runserver ssoberin.github.io/Data-Divas-Agent/
+        python back/manage.py runserver
