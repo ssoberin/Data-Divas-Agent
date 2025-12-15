@@ -45,6 +45,18 @@ class Depo(models.Model):
         verbose_name_plural = 'Депо'
 
 
+class ObjectTypeEnum:
+
+    WORKER = 'Сотрудник'
+    DEPO = "Депо"
+
+    values = {
+        WORKER: Worker,
+        DEPO: Depo,
+    }
+
+
+
 class Coordinates(models.Model):
     object_type = models.IntegerField(
         verbose_name="Тип объекта",
@@ -76,12 +88,3 @@ class Coordinates(models.Model):
         verbose_name_plural = 'Координаты объектов'
 
 
-class ObjectTypeEnum:
-
-    WORKER = 'Сотрудник'
-    DEPO = "Депо"
-
-    values = {
-        WORKER: Worker,
-        DEPO: Depo,
-    }
